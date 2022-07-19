@@ -13,7 +13,7 @@ public class ProcessingStoneQuarryObjectEntity extends AnyLogFueledProcessingTec
     public static int recipeProcessTime = 8000;
 
     public ProcessingStoneQuarryObjectEntity(Level level, int x, int y) {
-        super(level, "forge", x, y, 2, 2, false, false, true, new Tech[] {STONEQUARRY});
+        super(level, "stonequarry", x, y, 2, 2, false, false, true, new Tech[] {STONEQUARRY});
     }
 
     public int getFuelTime(InventoryItem item) {

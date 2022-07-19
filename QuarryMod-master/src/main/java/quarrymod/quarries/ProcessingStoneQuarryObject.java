@@ -16,6 +16,7 @@ import necesse.inventory.Inventory;
 import necesse.inventory.InventoryItem;
 import necesse.inventory.InventoryRange;
 import necesse.inventory.container.object.CraftingStationContainer;
+import necesse.inventory.item.toolItem.ToolType;
 import necesse.inventory.itemFilter.ItemCategoriesFilter;
 import necesse.inventory.recipe.Recipe;
 import necesse.inventory.recipe.Recipes;
@@ -35,40 +36,14 @@ public class ProcessingStoneQuarryObject extends GameObject implements Settlemen
 
     public ProcessingStoneQuarryObject() {
         super(new Rectangle(32, 32));
+        toolType = ToolType.PICKAXE;
         this.drawDmg = false;
-        this.isLightTransparent = true;
-        this.roomProperties.add("metalwork");
-        this.lightHue = 50.0F;
-        this.lightSat = 0.2F;
-    }
-
-    public int getLightLevel(Level level, int x, int y) {
-        ProcessingStoneQuarryObjectEntity stoneQuarryObjectEntity = getStoneQuarryObjectEntity(level, x, y);
-        if (stoneQuarryObjectEntity != null && stoneQuarryObjectEntity.isFuelRunning())
-            return 100;
-        return 0;
-    }
-
-    public void tickEffect(Level level, int x, int y) {
-        super.tickEffect(level, x, y);
-        if (GameRandom.globalRandom.nextInt(10) == 0) {
-            ProcessingStoneQuarryObjectEntity stoneQuarryObjectEntity = getStoneQuarryObjectEntity(level, x, y);
-            if (stoneQuarryObjectEntity != null && stoneQuarryObjectEntity.isFuelRunning()) {
-                int startHeight = 16 + GameRandom.globalRandom.nextInt(16);
-                level.entityManager
-                        .addParticle((x * 32 + GameRandom.globalRandom
-                                .getIntBetween(8, 24)), (y * 32 + 32), Particle.GType.COSMETIC)
-
-                        .smokeColor()
-                        .heightMoves(startHeight, (startHeight + 20))
-                        .lifeTime(1000);
-            }
-        }
+        this.isLightTransparent = false;
     }
 
     public void loadTextures() {
         super.loadTextures();
-        this.texture = GameTexture.fromFile("objects/forge");
+        this.texture = GameTexture.fromFile("objects/stonequarry");
     }
 
     public Rectangle getCollision(Level level, int x, int y, int rotation) {
@@ -84,32 +59,19 @@ public class ProcessingStoneQuarryObject extends GameObject implements Settlemen
     }
 
     public void addDrawables(List<LevelSortedDrawable> list, OrderableDrawables tileList, Level level, int tileX, int tileY, TickManager tickManager, GameCamera camera, PlayerMob perspective) {
-        final TextureDrawOptions flame;
         GameLight light = level.getLightLevel(tileX, tileY);
         int drawX = camera.getTileDrawX(tileX);
         int drawY = camera.getTileDrawY(tileY);
-        byte rotation = level.getObjectRotation(tileX, tileY);
-        boolean isFueled = false;
-        ProcessingStoneQuarryObjectEntity objectEntity = getStoneQuarryObjectEntity(level, tileX, tileY);
-        if (objectEntity != null)
-            isFueled = objectEntity.isFuelRunning();
-        int spriteHeight = this.texture.getHeight() - 32;
-        final TextureDrawOptions options = this.texture.initDraw().sprite(rotation % 4, 0, 32, spriteHeight).light(light).pos(drawX, drawY - spriteHeight - 32);
-        if (isFueled && rotation == 2) {
-            int spriteX = (int)(level.getWorldEntity().getWorldTime() % 1200L / 300L);
-            flame = this.texture.initDraw().sprite(spriteX, spriteHeight / 32, 32).light(light).pos(drawX, drawY);
-        } else {
-            flame = null;
-        }
+        TextureDrawOptions options = texture.initDraw().light(light).pos(drawX, drawY - texture.getHeight() + 32);
         list.add(new LevelSortedDrawable(this, tileX, tileY) {
+            @Override
             public int getSortY() {
                 return 16;
             }
 
+            @Override
             public void draw(TickManager tickManager) {
                 options.draw();
-                if (flame != null)
-                    flame.draw();
             }
         });
     }
@@ -117,8 +79,7 @@ public class ProcessingStoneQuarryObject extends GameObject implements Settlemen
     public void drawPreview(Level level, int tileX, int tileY, int rotation, float alpha, PlayerMob player, GameCamera camera) {
         int drawX = camera.getTileDrawX(tileX);
         int drawY = camera.getTileDrawY(tileY);
-        int spriteHeight = this.texture.getHeight() - 32;
-        this.texture.initDraw().sprite(rotation % 4, 0, 32, spriteHeight).alpha(alpha).draw(drawX, drawY - spriteHeight - 32);
+        texture.initDraw().alpha(alpha).draw(drawX, drawY - texture.getHeight() + 32);
     }
 
     public ObjectEntity getNewObjectEntity(Level level, int x, int y) {
