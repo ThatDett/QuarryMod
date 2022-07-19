@@ -10,9 +10,9 @@ import static quarrymod.QuarryMod.GOLDQUARRY;
 import static quarrymod.QuarryMod.STONEQUARRY;
 
 public class ProcessingGoldQuarryObjectEntity extends AnyLogFueledProcessingTechInventoryObjectEntity {
-    public static int logFuelTime = 40000;
+    public static int logFuelTime = 35000;
 
-    public static int recipeProcessTime = 8000;
+    public static int recipeProcessTime = 10000;
 
     public ProcessingGoldQuarryObjectEntity(Level level, int x, int y) {
         super(level, "goldquarry", x, y, 2, 2, false, false, true, new Tech[] {GOLDQUARRY});

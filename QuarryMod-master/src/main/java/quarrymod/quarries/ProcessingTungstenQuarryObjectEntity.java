@@ -9,9 +9,9 @@ import necesse.level.maps.Level;
 import static quarrymod.QuarryMod.TUNGSTENQUARRY;
 
 public class ProcessingTungstenQuarryObjectEntity extends AnyLogFueledProcessingTechInventoryObjectEntity {
-    public static int logFuelTime = 40000;
+    public static int logFuelTime = 20000;
 
-    public static int recipeProcessTime = 8000;
+    public static int recipeProcessTime = 15000;
 
     public ProcessingTungstenQuarryObjectEntity(Level level, int x, int y) {
         super(level, "tungstenquarry", x, y, 2, 2, false, false, true, new Tech[] {TUNGSTENQUARRY});
