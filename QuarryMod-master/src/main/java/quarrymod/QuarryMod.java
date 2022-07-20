@@ -1,6 +1,10 @@
 package quarrymod;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+
+import necesse.engine.GlobalData;
 import quarrymod.quarries.*;
 import necesse.engine.modLoader.annotations.ModEntry;
 import necesse.engine.registries.*;
@@ -217,8 +221,27 @@ public class QuarryMod {
     public void setValues()
     {
         BufferedReader reader;
+        String filename = GlobalData.rootPath() + "/config/config.cfg";
+
         try {
-            reader = new BufferedReader(new FileReader("src/main/resources/config.cfg"));
+            File file = new File(filename);
+            if (!file.exists())
+            {
+                if (!file.getParentFile().mkdirs()) throw new IOException("Error creating directory: " + file.getParentFile().toPath());
+                if (!file.createNewFile()) throw new IOException("Error creating file: " + file.toPath());
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(file.toPath()), StandardCharsets.UTF_8))) {
+                    writer.write("stone=100\n" +
+                            "copper=25\n" +
+                            "iron=25\n" +
+                            "gold=25\n" +
+                            "ivy=25\n" +
+                            "quartz=40\n" +
+                            "tungsten=25\n" +
+                            "glacial=25\n" +
+                            "ancientfossil=25");
+                }
+            }
+            reader = new BufferedReader(new FileReader(filename));
             String line = reader.readLine();
             while (line!=null)
             {
