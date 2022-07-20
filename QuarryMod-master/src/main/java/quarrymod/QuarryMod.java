@@ -1,6 +1,6 @@
 package quarrymod;
 
-import necesse.gfx.gameTexture.GameTexture;
+import java.io.*;
 import quarrymod.quarries.*;
 import necesse.engine.modLoader.annotations.ModEntry;
 import necesse.engine.registries.*;
@@ -16,14 +16,26 @@ public class QuarryMod {
     public static Tech IRONQUARRY;
     public static Tech GOLDQUARRY;
     public static Tech IVYQUARRY;
-
     public static Tech QUARTZQUARRY;
     public static Tech ANCIENTFOSSILQUARRY;
     public static Tech TUNGSTENQUARRY;
     public static Tech GLACIALQUARRY;
 
+    public int stonecost = 100;
+    public int coppercost = 25;
+    public int ironcost = 25;
+    public int goldcost = 25;
+    public int ivycost = 25;
+    public int quartzcost = 40;
+    public int tungstencost = 25;
+    public int glacialcost = 25;
+    public int ancientfossilcost = 25;
+
+
     public void init() {
         System.out.println("Hello world from my quarry mod!");
+
+        setValues();
 
         // Register our objects
         ObjectRegistry.registerObject("stonequarry", new ProcessingStoneQuarryObject(), 10, true);
@@ -47,6 +59,7 @@ public class QuarryMod {
         GLACIALQUARRY = RecipeTechRegistry.registerTech("GLACIALQUARRY");
         ANCIENTFOSSILQUARRY = RecipeTechRegistry.registerTech("ANCIENTFOSSILQUARRY");
 
+
     }
 
     public void postInit() {
@@ -57,7 +70,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.WORKSTATION,
                 new Ingredient[]{
-                        new Ingredient("stone", 100)
+                        new Ingredient("stone", stonecost)
                 }
         ).showAfter("forge"));
 
@@ -66,7 +79,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.WORKSTATION,
                 new Ingredient[]{
-                        new Ingredient("copperbar", 25)
+                        new Ingredient("copperbar", coppercost)
                 }
         ).showAfter("stonequarry"));
 
@@ -75,7 +88,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.WORKSTATION,
                 new Ingredient[]{
-                        new Ingredient("ironbar", 25)
+                        new Ingredient("ironbar", ironcost)
                 }
         ).showAfter("copperquarry"));
 
@@ -84,7 +97,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.WORKSTATION,
                 new Ingredient[]{
-                        new Ingredient("goldbar", 25)
+                        new Ingredient("goldbar", goldcost)
                 }
         ).showAfter("ironquarry"));
 
@@ -93,7 +106,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.DEMONIC,
                 new Ingredient[]{
-                        new Ingredient("ivybar", 25)
+                        new Ingredient("ivybar", ivycost)
                 }
         ).showAfter("goldquarry"));
 
@@ -102,7 +115,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.DEMONIC,
                 new Ingredient[]{
-                        new Ingredient("quartz", 40)
+                        new Ingredient("quartz", quartzcost)
                 }
         ).showAfter("ivyquarry"));
 
@@ -111,7 +124,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.ADVANCED_WORKSTATION,
                 new Ingredient[]{
-                        new Ingredient("tungstenbar", 25)
+                        new Ingredient("tungstenbar", tungstencost)
                 }
         ).showAfter("quartzquarry"));
 
@@ -120,7 +133,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.ADVANCED_WORKSTATION,
                 new Ingredient[]{
-                        new Ingredient("glacialbar", 25)
+                        new Ingredient("glacialbar", glacialcost)
                 }
         ).showAfter("tungstenquarry"));
 
@@ -129,7 +142,7 @@ public class QuarryMod {
                 1,
                 RecipeTechRegistry.ADVANCED_WORKSTATION,
                 new Ingredient[]{
-                        new Ingredient("ancientfossilbar", 25)
+                        new Ingredient("ancientfossilbar", ancientfossilcost)
                 }
         ).showAfter("glacialquarry"));
 
@@ -199,6 +212,61 @@ public class QuarryMod {
                 new Ingredient[]{}
         ));
 
+    }
+
+    public void setValues()
+    {
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader("src/main/resources/config.cfg"));
+            String line = reader.readLine();
+            while (line!=null)
+            {
+                String tempLine = line.substring(line.indexOf("=")+1);
+                int x = Integer.parseInt(tempLine);
+                if (line.contains("stone"))
+                {
+                    stonecost = x;
+                }
+                else if (line.contains("copper"))
+                {
+                    coppercost = x;
+                }
+                else if (line.contains("iron"))
+                {
+                    ironcost = x;
+                }
+                else if (line.contains("gold"))
+                {
+                    goldcost = x;
+                }
+                else if (line.contains("ivy"))
+                {
+                    ivycost = x;
+                }
+                else if (line.contains("quartz"))
+                {
+                    quartzcost = x;
+                }
+                else if (line.contains("tungsten"))
+                {
+                    tungstencost = x;
+                }
+                else if (line.contains("glacial"))
+                {
+                    glacialcost = x;
+                }
+                else if (line.contains("ancientfossil"))
+                {
+                    ancientfossilcost = x;
+                }
+                line=reader.readLine();
+            }
+            reader.close();
+        }
+        catch (IOException e) {
+             e.printStackTrace();
+        }
     }
 
 }
