@@ -232,7 +232,7 @@ public class QuarryMod {
                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(file.toPath()), StandardCharsets.UTF_8))) {
                     writer.write("stone=100\n" +
                             "copper=25\n" +
-                            "iron=99\n" +
+                            "iron=25\n" +
                             "gold=25\n" +
                             "ivy=25\n" +
                             "quartz=40\n" +
