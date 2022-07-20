@@ -221,7 +221,7 @@ public class QuarryMod {
     public void setValues()
     {
         BufferedReader reader;
-        String filename = GlobalData.rootPath() + "/QuarryMod/config/config.cfg";
+        String filename = GlobalData.cfgPath() + "/mods/QuarryMod/config.cfg";
 
         try {
             File file = new File(filename);
