@@ -6,10 +6,10 @@ plugins {
 // To change the project name, edit the settings.gradle file
 
 project.ext.modID = "kkdj20.quarrymod" // The unique id of your mod. Must be all lowercase and cannot use special characters.
-project.ext.modName = "Quarry Mod" // The display name of your mod.
-project.ext.modVersion = "0.2" // Your current builds version. Must follow the xx.xx... format.
+project.ext.modName = "Quarries" // The display name of your mod.
+project.ext.modVersion = "0.9" // Your current builds version. Must follow the xx.xx... format.
 project.ext.gameVersion = "0.21.23" // The target game version.
-project.ext.modDescription = "Adds quarries to the game which, when fueled, generate the respective stone or ores" // Short description of what your mod is.
+project.ext.modDescription = "Adds 9 quarries to the game which generate their respective ores when fueled" // Short description of what your mod is.
 project.ext.author = "kkdj20" // Your name
 
 /**
