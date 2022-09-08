@@ -24,7 +24,7 @@ public class QuarryMod {
     public static Tech ANCIENTFOSSILQUARRY;
     public static Tech TUNGSTENQUARRY;
     public static Tech GLACIALQUARRY;
-
+    public static Tech COALQUARRY;
     public int stonecost = 100;
     public int coppercost = 25;
     public int ironcost = 25;
@@ -35,6 +35,7 @@ public class QuarryMod {
     public int glacialcost = 25;
     public int ancientfossilcost = 25;
 
+    public int coalcost = 25;
 
     public void init() {
         System.out.println("Hello world from my quarry mod!");
@@ -51,6 +52,9 @@ public class QuarryMod {
         ObjectRegistry.registerObject("tungstenquarry", new ProcessingTungstenQuarryObject(), 200, true);
         ObjectRegistry.registerObject("glacialquarry", new ProcessingGlacialQuarryObject(), 200, true);
         ObjectRegistry.registerObject("ancientfossilquarry", new ProcessingAncientFossilQuarryObject(), 200, true);
+        ObjectRegistry.registerObject("coalquarry", new ProcessingCoalQuarryObject(), 100, true);
+
+
 
         // Add recipe tech for stone quarry
         STONEQUARRY = RecipeTechRegistry.registerTech("STONEQUARRY");
@@ -62,11 +66,15 @@ public class QuarryMod {
         TUNGSTENQUARRY = RecipeTechRegistry.registerTech("TUNGSTENQUARRY");
         GLACIALQUARRY = RecipeTechRegistry.registerTech("GLACIALQUARRY");
         ANCIENTFOSSILQUARRY = RecipeTechRegistry.registerTech("ANCIENTFOSSILQUARRY");
+        COALQUARRY = RecipeTechRegistry.registerTech("COALQUARRY");
 
 
     }
 
     public void postInit() {
+
+        boolean coalExists = ItemRegistry.itemExists("coal");
+        System.out.println("Coal Exists? " + coalExists);
 
         // Stone quarry object recipe, crafted at workstation for 100 stone
         Recipes.registerModRecipe(new Recipe(
@@ -105,6 +113,18 @@ public class QuarryMod {
                 }
         ).showAfter("ironquarry"));
 
+        if (coalExists)
+        {
+            Recipes.registerModRecipe(new Recipe(
+            "coalquarry",
+            1,
+                    RecipeTechRegistry.DEMONIC,
+                    new Ingredient[]{
+                            new Ingredient("coal", coalcost)
+                    }
+            ).showAfter("goldquarry"));
+        }
+
         Recipes.registerModRecipe(new Recipe(
                 "ivyquarry",
                 1,
@@ -112,7 +132,7 @@ public class QuarryMod {
                 new Ingredient[]{
                         new Ingredient("ivybar", ivycost)
                 }
-        ).showAfter("goldquarry"));
+        ).showAfter(coalExists ? "coalquarry" : "goldquarry"));
 
         Recipes.registerModRecipe(new Recipe(
                 "quartzquarry",
@@ -152,7 +172,6 @@ public class QuarryMod {
 
 
 
-
         // Recipe for making stone from the quarry
         Recipes.registerModRecipe(new Recipe(
                 "stone",
@@ -182,6 +201,15 @@ public class QuarryMod {
                 new Ingredient[]{}
         ));
 
+        if (coalExists)
+        {
+            Recipes.registerModRecipe(new Recipe(
+                    "coal",
+                    1,
+                    COALQUARRY,
+                    new Ingredient[]{}
+            ));
+        }
         Recipes.registerModRecipe(new Recipe(
                 "ivyore",
                 1,
@@ -238,7 +266,8 @@ public class QuarryMod {
                             "quartz=40\n" +
                             "tungsten=25\n" +
                             "glacial=25\n" +
-                            "ancientfossil=25");
+                            "ancientfossil=25\n" +
+                            "coal=25");
                 }
             }
             reader = new BufferedReader(new FileReader(filename));
@@ -282,6 +311,10 @@ public class QuarryMod {
                 else if (line.contains("ancientfossil"))
                 {
                     ancientfossilcost = x;
+                }
+                else if (line.contains("coal"))
+                {
+                    coalcost = x;
                 }
                 line=reader.readLine();
             }
