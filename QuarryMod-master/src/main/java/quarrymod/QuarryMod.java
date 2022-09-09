@@ -3,6 +3,8 @@ package quarrymod;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import necesse.engine.GlobalData;
 import quarrymod.quarries.*;
@@ -25,6 +27,8 @@ public class QuarryMod {
     public static Tech TUNGSTENQUARRY;
     public static Tech GLACIALQUARRY;
     public static Tech COALQUARRY;
+
+    public static Tech MYCELIUMQUARRY;
     public int stonecost = 100;
     public int coppercost = 25;
     public int ironcost = 25;
@@ -35,7 +39,10 @@ public class QuarryMod {
     public int glacialcost = 25;
     public int ancientfossilcost = 25;
 
+    public int myceliumcost = 25;
     public int coalcost = 25;
+
+
 
     public void init() {
         System.out.println("Hello world from my quarry mod!");
@@ -52,6 +59,7 @@ public class QuarryMod {
         ObjectRegistry.registerObject("tungstenquarry", new ProcessingTungstenQuarryObject(), 200, true);
         ObjectRegistry.registerObject("glacialquarry", new ProcessingGlacialQuarryObject(), 200, true);
         ObjectRegistry.registerObject("ancientfossilquarry", new ProcessingAncientFossilQuarryObject(), 200, true);
+        ObjectRegistry.registerObject("myceliumquarry", new ProcessingMyceliumQuarryObject(), 200, true);
         ObjectRegistry.registerObject("coalquarry", new ProcessingCoalQuarryObject(), 100, true);
 
 
@@ -66,6 +74,7 @@ public class QuarryMod {
         TUNGSTENQUARRY = RecipeTechRegistry.registerTech("TUNGSTENQUARRY");
         GLACIALQUARRY = RecipeTechRegistry.registerTech("GLACIALQUARRY");
         ANCIENTFOSSILQUARRY = RecipeTechRegistry.registerTech("ANCIENTFOSSILQUARRY");
+        MYCELIUMQUARRY = RecipeTechRegistry.registerTech("MYCELIUMQUARRY");
         COALQUARRY = RecipeTechRegistry.registerTech("COALQUARRY");
 
 
@@ -170,7 +179,14 @@ public class QuarryMod {
                 }
         ).showAfter("glacialquarry"));
 
-
+        Recipes.registerModRecipe(new Recipe(
+                "myceliumquarry",
+                1,
+                RecipeTechRegistry.ADVANCED_WORKSTATION,
+                new Ingredient[]{
+                        new Ingredient("myceliumbar", myceliumcost)
+                }
+        ).showAfter("ancientfossilquarry"));
 
         // Recipe for making stone from the quarry
         Recipes.registerModRecipe(new Recipe(
@@ -244,6 +260,13 @@ public class QuarryMod {
                 new Ingredient[]{}
         ));
 
+        Recipes.registerModRecipe(new Recipe(
+                "myceliumore",
+                1,
+                MYCELIUMQUARRY,
+                new Ingredient[]{}
+        ));
+
     }
 
     public void setValues()
@@ -267,13 +290,16 @@ public class QuarryMod {
                             "tungsten=25\n" +
                             "glacial=25\n" +
                             "ancientfossil=25\n" +
+                            "mycelium=25\n" +
                             "coal=25");
                 }
             }
             reader = new BufferedReader(new FileReader(filename));
+            int lineCount = 0;
             String line = reader.readLine();
             while (line!=null)
             {
+                lineCount++;
                 String tempLine = line.substring(line.indexOf("=")+1);
                 int x = Integer.parseInt(tempLine);
                 if (line.contains("stone"))
@@ -312,11 +338,26 @@ public class QuarryMod {
                 {
                     ancientfossilcost = x;
                 }
+                else if (line.contains("mycelium"))
+                {
+                    myceliumcost = x;
+                }
                 else if (line.contains("coal"))
                 {
                     coalcost = x;
                 }
                 line=reader.readLine();
+            }
+            System.out.println(lineCount + " this is the count from 1st gen mod");
+            if (lineCount == 9)
+            {
+                Files.write(Paths.get(filename), "\nmyceliumcost=25".getBytes(), StandardOpenOption.APPEND);
+                lineCount++;
+            }
+            if (lineCount == 10)
+            {
+                Files.write(Paths.get(filename), "\ncoalcost=25".getBytes(), StandardOpenOption.APPEND);
+                lineCount++;
             }
             reader.close();
         }
